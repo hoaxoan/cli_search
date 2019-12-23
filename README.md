@@ -36,9 +36,10 @@ $ ./main search ticket subject "A Nuisance in Poland"
 ```
 
 ## Unsupported features:
-Search empty data
-Unit test
-Mock data
+- Search empty data
+- Unit test
+- Mock data
+- Restful api
 
 
 
