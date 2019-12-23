@@ -5,6 +5,6 @@ import (
 )
 
 type Repository interface {
-	Describe()
+	Describe() []string
 	Search(field, word string) ([]*model.Organization, error)
 }

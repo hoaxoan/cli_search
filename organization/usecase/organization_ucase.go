@@ -22,8 +22,8 @@ func New(o organization.Repository, t ticket.Repository, u user.Repository) orga
 	}
 }
 
-func (ouc *organizationUsecase) Describe() {
-
+func (ouc *organizationUsecase) Describe() []string{
+	return ouc.organizationRepo.Describe()
 }
 
 func (ouc *organizationUsecase) Search(field, word string) ([]*model.Organization, error) {

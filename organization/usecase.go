@@ -5,6 +5,6 @@ import (
 )
 
 type Usecase interface {
-	Describe()
+	Describe() []string
 	Search(field, word string) ([]*model.Organization, error)
 }

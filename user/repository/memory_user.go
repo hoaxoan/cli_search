@@ -2,7 +2,6 @@ package repository
 
 import (
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"log"
 
@@ -16,8 +15,8 @@ type memoryUserRepo struct {
 }
 
 func New() user.Repository {
-	items := loadDataFromJSON(config.Config.Data.Ticket)
-	return &memoryUserRepo{
+	items := loadDataFromJSON(config.Config.Data.User)
+	return memoryUserRepo{
 		items: &items,
 	}
 }
@@ -29,15 +28,15 @@ func loadDataFromJSON(filename string) []model.User {
 	if err != nil {
 		log.Fatalf("read json file error: %v", err)
 	}
-	fmt.Printf("tickets: %+v", slice)
+	//fmt.Printf("tickets: %+v", slice)
 	return slice
 }
 
-func (memUserRepo *memoryUserRepo) Describe() {
+func (memUserRepo memoryUserRepo) Describe() {
 
 }
 
-func (memUserRepo *memoryUserRepo) Search(field, word string) ([]*model.User, error) {
+func (memUserRepo memoryUserRepo) Search(field, word string) ([]*model.User, error) {
 	var result []*model.User
 	for _, v := range *memUserRepo.items {
 		if v.SearchByField(field, word) {

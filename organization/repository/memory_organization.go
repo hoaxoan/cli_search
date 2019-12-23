@@ -2,7 +2,6 @@ package repository
 
 import (
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"log"
 
@@ -17,7 +16,7 @@ type memoryOrganizationRepo struct {
 
 func New() organization.Repository {
 	items := loadDataFromJSON(config.Config.Data.Organization)
-	return &memoryOrganizationRepo{
+	return memoryOrganizationRepo{
 		items: &items,
 	}
 }
@@ -29,15 +28,15 @@ func loadDataFromJSON(filename string) []model.Organization {
 	if err != nil {
 		log.Fatalf("read json file error: %v", err)
 	}
-	fmt.Printf("organizations: %+v", slice)
+	//fmt.Printf("organizations: %+v", slice)
 	return slice
 }
 
-func (memOrgRepo *memoryOrganizationRepo) Describe() {
-
+func (memOrgRepo memoryOrganizationRepo) Describe() []string{
+	return []string{ "_id", "url", "name", "external_id","domain_names", "tags", "shared_tickets"}
 }
 
-func (memOrgRepo *memoryOrganizationRepo) Search(field, word string) ([]*model.Organization, error) {
+func (memOrgRepo memoryOrganizationRepo) Search(field, word string) ([]*model.Organization, error) {
 	var result []*model.Organization
 	for _, v := range *memOrgRepo.items {
 		if v.SearchByField(field, word) {
