@@ -33,13 +33,17 @@ func loadDataFromJSON(filename string) []model.Organization {
 }
 
 func (memOrgRepo memoryOrganizationRepo) Describe() []string {
-	return []string{"_id", "url", "name", "external_id", "domain_names", "tags", "shared_tickets"}
+	return []string{"_id", "url", "name", "external_id", "domain_names", "tags", "shared_tickets", "details"}
 }
 
 func (memOrgRepo memoryOrganizationRepo) Search(field, word string) ([]*model.Organization, error) {
 	var result []*model.Organization
 	for i, v := range memOrgRepo.items {
-		if v.SearchByField(field, word) {
+		ok, err := v.SearchByField(field, word)
+		if err != nil {
+			return result, err
+		}
+		if ok {
 			result = append(result, &memOrgRepo.items[i])
 		}
 	}

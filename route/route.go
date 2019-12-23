@@ -27,6 +27,10 @@ func FowardRoute(command string, args []string) {
 		return
 	}
 	subject := args[0]
+	if !(subject == "user" || subject == "ticket" || subject == "organization") {
+		fmt.Println("wrong param: command [user|ticket|organization]")
+		return
+	}
 	Handle(command, subject, args[1:])
 	// fmt.Printf("Route forward. command: %v, args: %v", command, args)
 }
@@ -75,30 +79,69 @@ func searchOrganization(args []string, uc organization.Usecase) {
 	field := args[0]
 	word := args[1]
 	data, err := uc.Search(field, word)
-	fmt.Println("param", field, word, data)
 	if err != nil {
 		fmt.Printf("search organization error: %v", err)
 	}
+	fmt.Printf("Found %d Result(s)\n", len(data))
+	if len(data) == 0 {
+		return
+	}
 
 	bs, _ := json.MarshalIndent(data, "", "  ")
-	fmt.Println("Search Result")
+
 	fmt.Println(string(bs))
 }
 
 // ****** user
 func describeUser(args []string, uc user.Usecase) {
+	data := uc.Describe()
+	fmt.Println("User have these field")
 
+	for _, v := range data {
+		fmt.Println(v)
+	}
 }
 
 func searchUser(args []string, uc user.Usecase) {
+	field := args[0]
+	word := args[1]
+	data, err := uc.Search(field, word)
+	if err != nil {
+		fmt.Printf("search user error: %v", err)
+	}
+	fmt.Printf("Found %d Result(s)\n", len(data))
+	if len(data) == 0 {
+		return
+	}
 
+	bs, _ := json.MarshalIndent(data, "", "  ")
+
+	fmt.Println(string(bs))
 }
 
 // ****** ticket
 func describeTicket(args []string, uc ticket.Usecase) {
+	data := uc.Describe()
+	fmt.Println("Ticket have these field")
 
+	for _, v := range data {
+		fmt.Println(v)
+	}
 }
 
 func searchTicket(args []string, uc ticket.Usecase) {
+	field := args[0]
+	word := args[1]
+	data, err := uc.Search(field, word)
+	if err != nil {
+		fmt.Printf("search ticket error: %v", err)
+	}
+	fmt.Printf("Found %d Result(s)\n", len(data))
+	if len(data) == 0 {
+		return
+	}
 
+	bs, _ := json.MarshalIndent(data, "", "  ")
+
+	fmt.Println(string(bs))
 }

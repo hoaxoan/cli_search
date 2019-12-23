@@ -1,6 +1,7 @@
 package model
 
 import (
+	"errors"
 	"fmt"
 	"strconv"
 )
@@ -21,28 +22,31 @@ type User struct {
 	Suspended      bool     `json:"suspended"`
 	CreatedAt      string   `json:"created_at"`
 
-	Organization  string   `json:"organization"`
-	AssignTickets []string `json:"assign_tickets"`
+	Organization     string   `json:"organization"`
+	AssigneeTickets  []string `json:"assignee_tickets"`
+	SubmitterTickets []string `json:"submitter_tickets"`
 }
 
-func (u User) SearchByField(field string, word string) bool {
+func (u User) SearchByField(field string, word string) (bool, error) {
 	switch field {
 	case "_id":
-		return u.SearchID(word)
+		return u.SearchID(word), nil
 	case "url":
-		return u.SearchURL(word)
-	case "subject":
-		return u.SearchName(word)
+		return u.SearchURL(word), nil
+	case "name":
+		return u.SearchName(word), nil
+	case "alias":
+		return u.SearchAlias(word), nil
 	case "external_id":
-		return u.SearchExternalID(word)
+		return u.SearchExternalID(word), nil
 	case "tag":
-		return u.SearchTag(word)
+		return u.SearchTag(word), nil
 
 	case "organization_id":
-		return u.SearchOrganizationID(word)
+		return u.SearchOrganizationID(word), nil
 	default:
 		fmt.Println("Unsupported field search:", field)
-		return false
+		return false, errors.New("Unsupported field search: " + field)
 	}
 }
 
@@ -65,6 +69,13 @@ func (u User) SearchURL(word string) bool {
 }
 
 func (u User) SearchName(word string) bool {
+	if u.Name == word {
+		return true
+	}
+	return false
+}
+
+func (u User) SearchAlias(word string) bool {
 	if u.Name == word {
 		return true
 	}

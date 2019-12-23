@@ -32,14 +32,18 @@ func loadDataFromJSON(filename string) []model.User {
 	return slice
 }
 
-func (memUserRepo memoryUserRepo) Describe() {
-
+func (memUserRepo memoryUserRepo) Describe() []string {
+	return []string{"id", "url", "external_id", "name", "alias", "tags", "organization_id", "role", "shared", "locale", "verified", "active"}
 }
 
 func (memUserRepo memoryUserRepo) Search(field, word string) ([]*model.User, error) {
 	var result []*model.User
 	for i, v := range memUserRepo.items {
-		if v.SearchByField(field, word) {
+		ok, err := v.SearchByField(field, word)
+		if err != nil {
+			return result, err
+		}
+		if ok {
 			result = append(result, &memUserRepo.items[i])
 		}
 	}

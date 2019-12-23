@@ -1,6 +1,7 @@
 package model
 
 import (
+	"errors"
 	"fmt"
 	"strconv"
 )
@@ -20,25 +21,26 @@ type Organization struct {
 	Users   []string `json:"users"`
 }
 
-func (o Organization) SearchByField(field string, word string) bool {
+func (o Organization) SearchByField(field string, word string) (bool, error) {
 	switch field {
 	case "_id":
-		return o.SearchID(word)
+		return o.SearchID(word), nil
 	case "url":
-		return o.SearchURL(word)
+		return o.SearchURL(word), nil
 	case "name":
-		return o.SearchName(word)
+		return o.SearchName(word), nil
 	case "external_id":
-		return o.SearchExternalID(word)
+		return o.SearchExternalID(word), nil
 	case "tag":
-		return o.SearchTag(word)
+		return o.SearchTag(word), nil
 	case "domain_name":
-		return o.SearchDomainNames(word)
+		return o.SearchDomainNames(word), nil
 	case "shared_ticket":
-		return o.SearchSharedTicket(word)
+		return o.SearchSharedTicket(word), nil
 	default:
 		fmt.Println("Unsupported field search:", field)
-		return false
+
+		return false, errors.New("Unsupported field search:" + field)
 	}
 }
 

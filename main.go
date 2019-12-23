@@ -16,28 +16,28 @@ limitations under the License.
 package main
 
 import (
-  "github.com/letanthang/cli_search/cmd"
-  organization_repository "github.com/letanthang/cli_search/organization/repository"
-  user_repository "github.com/letanthang/cli_search/user/repository"
-  ticket_repository "github.com/letanthang/cli_search/ticket/repository"
-  organization_usecase "github.com/letanthang/cli_search/organization/usecase"
-  user_usecase "github.com/letanthang/cli_search/user/usecase"
-  ticket_usecase "github.com/letanthang/cli_search/ticket/usecase"
-  "github.com/letanthang/cli_search/route"
+	"github.com/letanthang/cli_search/cmd"
+	organization_repository "github.com/letanthang/cli_search/organization/repository"
+	organization_usecase "github.com/letanthang/cli_search/organization/usecase"
+	"github.com/letanthang/cli_search/route"
+	ticket_repository "github.com/letanthang/cli_search/ticket/repository"
+	ticket_usecase "github.com/letanthang/cli_search/ticket/usecase"
+	user_repository "github.com/letanthang/cli_search/user/repository"
+	user_usecase "github.com/letanthang/cli_search/user/usecase"
 )
 
 func main() {
-  organizationRepo := organization_repository.New()
-  userRepo := user_repository.New()
-  ticketRepo := ticket_repository.New()
+	organizationRepo := organization_repository.New()
+	userRepo := user_repository.New()
+	ticketRepo := ticket_repository.New()
 
-  organizationUsecase := organization_usecase.New(organizationRepo, ticketRepo, userRepo)
-  userUsecase := user_usecase.New(userRepo)
-  ticketUsecase := ticket_usecase.New(ticketRepo)
+	organizationUsecase := organization_usecase.New(organizationRepo, ticketRepo, userRepo)
+	userUsecase := user_usecase.New(userRepo, ticketRepo, organizationRepo)
+	ticketUsecase := ticket_usecase.New(ticketRepo, userRepo, organizationRepo)
 
-  route.OrganizationUsecase = organizationUsecase
-  route.TicketUsecase = ticketUsecase
-  route.UserUsecase = userUsecase
+	route.OrganizationUsecase = organizationUsecase
+	route.TicketUsecase = ticketUsecase
+	route.UserUsecase = userUsecase
 
-  cmd.Execute()
+	cmd.Execute()
 }

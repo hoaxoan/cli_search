@@ -32,14 +32,18 @@ func loadDataFromJSON(filename string) []model.Ticket {
 	return slice
 }
 
-func (memOrgRepo memoryTicketRepo) Describe() {
-
+func (memOrgRepo memoryTicketRepo) Describe() []string {
+	return []string{"_id", "url", "external_id", "type", "subject", "description", "priority", "status", "submitter_id", "assignee_id", "tag", "has_incidents", "organization_id", "via"}
 }
 
 func (memOrgRepo memoryTicketRepo) Search(field, word string) ([]*model.Ticket, error) {
 	var result []*model.Ticket
 	for i, v := range memOrgRepo.items {
-		if v.SearchByField(field, word) {
+		ok, err := v.SearchByField(field, word)
+		if err != nil {
+			return result, err
+		}
+		if ok {
 			result = append(result, &memOrgRepo.items[i])
 		}
 	}
