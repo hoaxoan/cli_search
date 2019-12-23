@@ -34,6 +34,11 @@ $ ./main search organization tag Fulton
 $ ./main search user name "Loraine Pittman"
 $ ./main search ticket subject "A Nuisance in Poland"
 ```
-  
+
+## Unsupported features:
+Search empty data
+Unit test
+Mock data
+
 
 
