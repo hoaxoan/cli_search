@@ -22,43 +22,43 @@ func New(o organization.Repository, t ticket.Repository, u user.Repository) orga
 	}
 }
 
-func (ouc *organizationUsecase) Describe() []string{
+func (ouc *organizationUsecase) Describe() []string {
 	return ouc.organizationRepo.Describe()
 }
 
 func (ouc *organizationUsecase) Search(field, word string) ([]*model.Organization, error) {
 	data, err := ouc.organizationRepo.Search(field, word)
-	data, err = ouc.fillTicket(data)
-	data, err = ouc.fillUser(data)
+	err = ouc.fillTicket(data)
+	err = ouc.fillUser(data)
 	return data, err
 }
 
-func (ouc *organizationUsecase) fillUser(data []*model.Organization) ([]*model.Organization, error) {
-	var result []*model.Organization
-	for _, o := range data {
+func (ouc *organizationUsecase) fillUser(data []*model.Organization) error {
 
+	for _, o := range data {
 		users, err := ouc.userRepo.Search("organization_id", fmt.Sprintf("%d", o.ID))
 		if err != nil {
-			return result, err
+			fmt.Printf("fill user err %v", err)
+			return err
 		}
+
 		for _, u := range users {
 			o.Users = append(o.Users, u.Name)
 		}
 	}
-	return nil, nil
+	return nil
 }
 
-func (ouc *organizationUsecase) fillTicket(data []*model.Organization) ([]*model.Organization, error) {
-	var result []*model.Organization
+func (ouc *organizationUsecase) fillTicket(data []*model.Organization) error {
 	for _, o := range data {
-
 		tickets, err := ouc.ticketRepo.Search("organization_id", fmt.Sprintf("%d", o.ID))
 		if err != nil {
-			return result, err
+			fmt.Printf("fill ticket err %v", err)
+			return err
 		}
 		for _, t := range tickets {
-			o.Users = append(o.Users, t.Subject)
+			o.Tickets = append(o.Tickets, t.Subject)
 		}
 	}
-	return nil, nil
+	return nil
 }

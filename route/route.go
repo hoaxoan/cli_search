@@ -32,7 +32,7 @@ func FowardRoute(command string, args []string) {
 }
 
 func Handle(command, subject string, args []string) {
-	if subject == "organization"{
+	if subject == "organization" {
 		if command == "describe" {
 			describeOrganization(args, OrganizationUsecase)
 		}
@@ -41,7 +41,7 @@ func Handle(command, subject string, args []string) {
 		}
 	}
 
-	if subject == "user"{
+	if subject == "user" {
 		if command == "describe" {
 			describeUser(args, UserUsecase)
 		}
@@ -50,7 +50,7 @@ func Handle(command, subject string, args []string) {
 		}
 	}
 
-	if subject == "ticket"{
+	if subject == "ticket" {
 		if command == "describe" {
 			describeTicket(args, TicketUsecase)
 		}
@@ -59,7 +59,6 @@ func Handle(command, subject string, args []string) {
 		}
 	}
 }
-
 
 // ****** organization
 func describeOrganization(args []string, uc organization.Usecase) {
@@ -76,11 +75,12 @@ func searchOrganization(args []string, uc organization.Usecase) {
 	field := args[0]
 	word := args[1]
 	data, err := uc.Search(field, word)
+	fmt.Println("param", field, word, data)
 	if err != nil {
 		fmt.Printf("search organization error: %v", err)
 	}
 
-	bs, _ := json.Marshal(data)
+	bs, _ := json.MarshalIndent(data, "", "  ")
 	fmt.Println("Search Result")
 	fmt.Println(string(bs))
 }

@@ -11,13 +11,13 @@ import (
 )
 
 type memoryUserRepo struct {
-	items *[]model.User
+	items []model.User
 }
 
 func New() user.Repository {
 	items := loadDataFromJSON(config.Config.Data.User)
 	return memoryUserRepo{
-		items: &items,
+		items: items,
 	}
 }
 
@@ -38,10 +38,11 @@ func (memUserRepo memoryUserRepo) Describe() {
 
 func (memUserRepo memoryUserRepo) Search(field, word string) ([]*model.User, error) {
 	var result []*model.User
-	for _, v := range *memUserRepo.items {
+	for i, v := range memUserRepo.items {
 		if v.SearchByField(field, word) {
-			result = append(result, &v)
+			result = append(result, &memUserRepo.items[i])
 		}
 	}
+	// fmt.Printf("--------%+v\n", result)
 	return result, nil
 }

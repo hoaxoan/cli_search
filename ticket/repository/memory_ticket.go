@@ -11,13 +11,13 @@ import (
 )
 
 type memoryTicketRepo struct {
-	items *[]model.Ticket
+	items []model.Ticket
 }
 
 func New() ticket.Repository {
 	items := loadDataFromJSON(config.Config.Data.Ticket)
 	return memoryTicketRepo{
-		items: &items,
+		items: items,
 	}
 }
 
@@ -38,9 +38,9 @@ func (memOrgRepo memoryTicketRepo) Describe() {
 
 func (memOrgRepo memoryTicketRepo) Search(field, word string) ([]*model.Ticket, error) {
 	var result []*model.Ticket
-	for _, v := range *memOrgRepo.items {
+	for i, v := range memOrgRepo.items {
 		if v.SearchByField(field, word) {
-			result = append(result, &v)
+			result = append(result, &memOrgRepo.items[i])
 		}
 	}
 	return result, nil
